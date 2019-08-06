@@ -1,0 +1,33 @@
+{
+  "tasks": [
+    {
+      "id":"001",
+      "image":"http://picsum.photos/100/100?r=0.316088178113499",
+      "text":"Here is a card with filled data",
+      "dueDate":1564952781150,
+      "repeat":{"mo":false,"tu":false,"we":true,"th":false,"fr":true,"sa":true,"su":false},
+      "tags":{},
+      "colors":{"black":false,"yellow":true,"blue":false,"green":false,"pink":false},
+      "isFavorites":false
+    },
+    {
+      "id":"002","image":"//picsum.photos/100/100?r=0.48154976718669507",
+      "text":"Here is a card with filled data",
+      "dueDate":1564952781150,
+      "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
+      "tags":{},
+      "colors":{"black":false,"yellow":false,"blue":false,"green":true,"pink":false},
+      "isFavorites":true
+    },
+    {
+      "id":"003",
+      "image":"//picsum.photos/100/100?r=0.9972545899835956",
+      "text":"Here is a card with filled data",
+      "dueDate":"",
+      "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
+      "tags":{},
+      "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
+      "isFavorites":false
+    }
+  ]
+}
