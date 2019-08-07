@@ -74,6 +74,206 @@ const inputTasks = [
     },
     isFavorites: false,
   },
+  {
+    archive: false,
+    id: `003`,
+    image: `//picsum.photos/100/100?r=${Math.random()}`,
+    text: `Here is a card with filled data`,
+    dueDate: '',
+    repeat: {
+      'mo': false,
+      'tu': false,
+      'we': false,
+      'th': false,
+      'fr': false,
+      'sa': false,
+      'su': false
+    },
+    tags: new Set([`cinema`, `entertainment`]),
+    colors: {
+      'black': false,
+      'yellow': false,
+      'blue': true,
+      'green': false,
+      'pink': false
+    },
+    isFavorites: false,
+  },
+  {
+    archive: false,
+    id: `003`,
+    image: `//picsum.photos/100/100?r=${Math.random()}`,
+    text: `Here is a card with filled data`,
+    dueDate: '',
+    repeat: {
+      'mo': false,
+      'tu': false,
+      'we': false,
+      'th': false,
+      'fr': false,
+      'sa': false,
+      'su': false
+    },
+    tags: new Set([`cinema`, `entertainment`]),
+    colors: {
+      'black': false,
+      'yellow': false,
+      'blue': true,
+      'green': false,
+      'pink': false
+    },
+    isFavorites: false,
+  },
+  {
+    archive: false,
+    id: `003`,
+    image: `//picsum.photos/100/100?r=${Math.random()}`,
+    text: `Here is a card with filled data`,
+    dueDate: '',
+    repeat: {
+      'mo': false,
+      'tu': false,
+      'we': false,
+      'th': false,
+      'fr': false,
+      'sa': false,
+      'su': false
+    },
+    tags: new Set([`cinema`, `entertainment`]),
+    colors: {
+      'black': false,
+      'yellow': false,
+      'blue': true,
+      'green': false,
+      'pink': false
+    },
+    isFavorites: false,
+  },
+  {
+    archive: false,
+    id: `003`,
+    image: `//picsum.photos/100/100?r=${Math.random()}`,
+    text: `Here is a card with filled data`,
+    dueDate: '',
+    repeat: {
+      'mo': false,
+      'tu': false,
+      'we': false,
+      'th': false,
+      'fr': false,
+      'sa': false,
+      'su': false
+    },
+    tags: new Set([`cinema`, `entertainment`]),
+    colors: {
+      'black': false,
+      'yellow': false,
+      'blue': true,
+      'green': false,
+      'pink': false
+    },
+    isFavorites: false,
+  },
+  {
+    archive: false,
+    id: `003`,
+    image: `//picsum.photos/100/100?r=${Math.random()}`,
+    text: `Here is a card with filled data`,
+    dueDate: '',
+    repeat: {
+      'mo': false,
+      'tu': false,
+      'we': false,
+      'th': false,
+      'fr': false,
+      'sa': false,
+      'su': false
+    },
+    tags: new Set([`cinema`, `entertainment`]),
+    colors: {
+      'black': false,
+      'yellow': false,
+      'blue': true,
+      'green': false,
+      'pink': false
+    },
+    isFavorites: false,
+  },
+  {
+    archive: false,
+    id: `003`,
+    image: `//picsum.photos/100/100?r=${Math.random()}`,
+    text: `Here is a card with filled data`,
+    dueDate: '',
+    repeat: {
+      'mo': false,
+      'tu': false,
+      'we': false,
+      'th': false,
+      'fr': false,
+      'sa': false,
+      'su': false
+    },
+    tags: new Set([`cinema`, `entertainment`]),
+    colors: {
+      'black': false,
+      'yellow': false,
+      'blue': true,
+      'green': false,
+      'pink': false
+    },
+    isFavorites: false,
+  },
+  {
+    archive: false,
+    id: `003`,
+    image: `//picsum.photos/100/100?r=${Math.random()}`,
+    text: `Here is a card with filled data`,
+    dueDate: '',
+    repeat: {
+      'mo': false,
+      'tu': false,
+      'we': false,
+      'th': false,
+      'fr': false,
+      'sa': false,
+      'su': false
+    },
+    tags: new Set([`cinema`, `entertainment`]),
+    colors: {
+      'black': false,
+      'yellow': false,
+      'blue': true,
+      'green': false,
+      'pink': false
+    },
+    isFavorites: false,
+  },
+  {
+    archive: false,
+    id: `003`,
+    image: `//picsum.photos/100/100?r=${Math.random()}`,
+    text: `Here is a card with filled data`,
+    dueDate: '',
+    repeat: {
+      'mo': false,
+      'tu': false,
+      'we': false,
+      'th': false,
+      'fr': false,
+      'sa': false,
+      'su': false
+    },
+    tags: new Set([`cinema`, `entertainment`]),
+    colors: {
+      'black': false,
+      'yellow': false,
+      'blue': true,
+      'green': false,
+      'pink': false
+    },
+    isFavorites: false,
+  },
 ];
 
 export class TasksModel {
@@ -110,8 +310,8 @@ export class TasksModel {
    * @param modelId
    */
   deleteDataItem(modelId) {
-    const index = this._data.findIndex((element) => element.modelId === modelId);
-    if (index !== undefined) {
+    const index = this._data.findIndex((element) => !!element ? element.modelId === modelId : false);
+    if (!!index) {
       this._data[index] = null;
     }
   }

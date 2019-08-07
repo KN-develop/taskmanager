@@ -23,9 +23,13 @@ export default class Component {
   render() {
     this._element = createElement(this.template);
 
+    this.renderComponents();
     this.bind();
     return this._element;
   }
+  renderComponents() {}
+
+  resetData() {}
 
   bind() {}
 
@@ -33,6 +37,7 @@ export default class Component {
 
   unrender() {
     this.unbind();
+    this._element.remove();
     this._element = null;
   }
 }

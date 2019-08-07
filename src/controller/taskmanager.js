@@ -66,6 +66,12 @@ export default function taskmanager() {
           };
 
           // Диспетчеризация обновлений задачи в режиме редактирования
+          taskEditComponent.onEdit = () => {
+            taskComponent.render();
+            tasksContainer.replaceChild(taskComponent.element, taskEditComponent.element);
+            taskEditComponent.unrender();
+          };
+
           taskEditComponent.onReject = () => {
             taskComponent.render();
             tasksContainer.replaceChild(taskComponent.element, taskEditComponent.element);

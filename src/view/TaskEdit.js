@@ -1,9 +1,13 @@
 import createElement from "../service/create-element";
 import Component from './Component';
+import TaskTextarea from './form-components/TaskTexarea';
+import TaskColors from './form-components/TaskColors';
+import TaskTags from './form-components/TaskTags';
 
-export default class TaskEdit extends Component{
+export default class TaskEdit extends Component {
   constructor(data) {
     super();
+
     this._modelId = data.modelId;
     this._text = data.text;
     this._dueDate = data.dueDate;
@@ -12,11 +16,18 @@ export default class TaskEdit extends Component{
     this._tags = data.tags;
     this._repeatingDays = data.repeat;
     this._colors = data.colors;
-    this._checkColor = Object.entries(this._colors).find((element)=> element[1] && true)[0];
+    this._checkColor = Object.entries(this._colors).find((element) => element[1] && true)[0];
     this._isFavorites = data.isFavorites;
     this._isArchive = data.archive;
 
+    this._components = {
+      taskTextarea: new TaskTextarea({text: this._text}),
+      taskColors: new TaskColors({colors: this._colors}),
+      taskTags: new TaskTags({tags: this._tags}),
+    };
+
     this._element = null;
+    this._onEdit = null;
     this._onSubmit = null;
     this._onReject = null;
     this._onDelete = null;
@@ -32,13 +43,24 @@ export default class TaskEdit extends Component{
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onChangeDate = this._onChangeDate.bind(this);
     this._onChangeRepeated = this._onChangeRepeated.bind(this);
-    this._onInputHashtag = this._onInputHashtag.bind(this);
-    this._onDeleteHashtag = this._onDeleteHashtag.bind(this);
     this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
     this._onArchiveButtonClick = this._onArchiveButtonClick.bind(this);
     this._onClickWithoutTask = this._onClickWithoutTask.bind(this);
-    this._onFocusDateInput = this._onFocusDateInput.bind(this);
     this._onCheckedDate = this._onCheckedDate.bind(this);
+
+    // Обработчики событий компонентов
+    this._onInputHashtag = this._onInputHashtag.bind(this);
+    this._onDeleteHashtag = this._onDeleteHashtag.bind(this);
+    this._onSetText = this._onSetText.bind(this);
+    this._partialUpdate = this._partialUpdate.bind(this);
+  }
+
+  get components() {
+    return this._components;
+  }
+
+  get initData() {
+    return this.__copyData;
   }
 
   get dueDate() {
@@ -60,13 +82,18 @@ export default class TaskEdit extends Component{
         time: timeFormater.format(date),
       };
     } else {
-        return {
-          date: '',
-          time: '',
-        };
+      return {
+        date: '',
+        time: '',
+      };
     }
   }
 
+  /**
+   * Проверяет, задача повторяющаяся или нет
+   * @returns {boolean}
+   * @private
+   */
   _isRepeating() {
     return Object.values(this._repeatingDays).some((it) => it === true);
   }
@@ -93,17 +120,45 @@ export default class TaskEdit extends Component{
     this._state.checkedDate = date.getTime();
   }
 
+  /**
+   * Обрабатывает событие нажатия на кнопку сохранения задачи
+   * @param evt
+   * @private
+   */
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
     const formData = new FormData(this._element.querySelector(`.card__form`));
     const newData = this._processForm(formData);
     typeof this._onSubmit === `function` && this._onSubmit(newData);
     this.update(newData);
-  }
-  _onEditButtonClick() {
-    typeof this._onSubmit === `function` && this._onSubmit();
+
+    for (let key in this.components) {
+      this.components[key].update(newData);
+    }
   }
 
+  /**
+   * Обрабатывает событие нажатия на кнопку Edit. Сбрасывает состояние и закрывает карточку редактирования
+   * @private
+   */
+  _onEditButtonClick() {
+    if (typeof this._onEdit === `function`) {
+      // console.log('edit');
+      // this.update(this.initData);
+      this._onEdit();
+      for (let key in this.components) {
+        this.components[key].unrender();
+        // this.components[key]._element = null;
+        this.components[key].update(this.components[key].initData);
+      }
+    }
+  }
+
+  /**
+   * Обрабатывает событие нажатия на кнопку Favorite
+   * Добавляет в Favorite
+   * @private
+   */
   _onFavoriteButtonClick() {
     this._isFavorites = !this._isFavorites;
     this.unbind();
@@ -112,6 +167,11 @@ export default class TaskEdit extends Component{
 
     typeof this._onFavorites === `function` && this._onFavorites({isFavorites: this._isFavorites});
   }
+
+  /**
+   * Обрабатывает нажате на кнопку Archive. Отправляет задачу в архив.
+   * @private
+   */
   _onArchiveButtonClick() {
     this._isArchive = !this._isArchive;
     this.unbind();
@@ -121,14 +181,26 @@ export default class TaskEdit extends Component{
     typeof this._onArchive === `function` && this._onArchive({archive: this._isArchive});
   }
 
+  /**
+   * Обрабатывает клик на кнопку удаления. Вызывает метод удвляющий задачу
+   * @param evt
+   * @private
+   */
   _onDeleteButtonClick(evt) {
     evt.preventDefault();
     typeof this._onDelete === `function` && this._onDelete(this._modelId);
   }
 
+  /**
+   * Проверяет произошел ли клик мимо открытой задачи
+   * Если клик прошел за пределами открытой задачи, то вызывается метод this._onReject закрывающий карточку задачи без сохранения
+   * @param evt
+   * @returns {number}
+   * @private
+   */
   _onClickWithoutTask(evt) {
     for (let i = 0; i < evt.path.length; i++) {
-      if (evt.path[i].classList.contains('card--repeat') && evt.path[i] === this._element) {
+      if ((evt.path[i].classList.contains('card--edit') && evt.path[i] === this._element) || evt.path[i].classList.contains('datepickers-container')) {
         return 0;
       }
       if (evt.path[i].localName === 'body') {
@@ -139,6 +211,10 @@ export default class TaskEdit extends Component{
     this._onReject();
   }
 
+  /**
+   * Частичное обновление при включении / отключении даты
+   * @private
+   */
   _onChangeDate() {
     this._state.isDate = !this._state.isDate;
     this.unbind();
@@ -146,6 +222,10 @@ export default class TaskEdit extends Component{
     this.bind();
   }
 
+  /**
+   * Чачтичное обновление при включении / отключении повторяемости задачи
+   * @private
+   */
   _onChangeRepeated() {
     this._state.isRepeated = !this._state.isRepeated;
     this.unbind();
@@ -153,32 +233,69 @@ export default class TaskEdit extends Component{
     this.bind();
   }
 
+  /**
+   * Обрабатывает событие добавления хэштега. Делает частичное обновление элемента
+   * @param evt
+   * @private
+   */
   _onInputHashtag(evt) {
     this._tags.add(evt.target.value);
+    this.components.taskTags.tags = evt.target.value;
     this.unbind();
-    this._partialUpdate();
+    this._partialUpdate('taskTags');
     this.bind();
   }
+
+  /**
+   * Обрабатывает событие уаления хэштега
+   * @param evt
+   * @private
+   */
   _onDeleteHashtag(evt) {
     const target = evt.target;
     const input = target.parentNode.querySelector(`input`);
     this._tags.forEach((tag) => {
       tag === input.value && this._tags.delete(tag);
     });
+    this.components.taskTags._tags.forEach((tag) => {
+      tag === input.value && this.components.taskTags._tags.delete(tag);
+    });
     this.unbind();
-    this._partialUpdate();
+    this._partialUpdate('taskTags');
     this.bind();
   }
 
-  _onFocusDateInput() {
-    // console.log('dateinput');
-    this._element.querySelector(`.js-datepicker`).select();
+  // Методы для обработки событий дочерних компонентов
+  _onSetText(evt) {
+    this._text = evt.target.value;
+    this.components.taskTextarea.text = this._text;
+    this.unbind();
+    this._partialUpdate('taskTextarea');
+    this.bind();
   }
 
-  _partialUpdate() {
-    this._element.innerHTML = this.template;
+  /**
+   * Осуществляет перерисовку DOM элемента
+   * @private
+   */
+  _partialUpdate(componentName) {
+    if (componentName) {
+      const component = this._components[componentName];
+      component.unrender();
+      component.render();
+      this.renderComponents(componentName);
+    } else {
+      this._element.innerHTML = this.template;
+      this.renderComponents();
+    }
   }
 
+  /**
+   * Собирает данные из объекта формы и перегоняет их в объект для сохранения в модели
+   * @param formData
+   * @returns Object
+   * @private
+   */
   _processForm(formData) {
     const entry = {
       text: ``,
@@ -203,7 +320,7 @@ export default class TaskEdit extends Component{
 
     const taskEditMapper = TaskEdit.createMapper(entry);
 
-    for(const pair of formData.entries()) {
+    for (const pair of formData.entries()) {
       const [property, value] = pair;
       taskEditMapper[property] && taskEditMapper[property](value);
     }
@@ -211,9 +328,16 @@ export default class TaskEdit extends Component{
     return entry;
   }
 
+  // TODO Сеттеры методов
+
+  set onEdit(fn) {
+    this._onEdit = fn;
+  }
+
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
+
   set onReject(fn) {
     this._onReject = fn;
   }
@@ -225,6 +349,7 @@ export default class TaskEdit extends Component{
   set onFavorites(fn) {
     this._onFavorites = fn;
   }
+
   set onArchive(fn) {
     this._onArchive = fn;
   }
@@ -251,14 +376,8 @@ export default class TaskEdit extends Component{
                   </svg>
                 </div>
 
-                <div class="card__textarea-wrap">
-                  <label>
-                    <textarea
-                              class="card__text"
-                              placeholder="Start typing your text here..."
-                              name="text">${this._text}
-                    </textarea>
-                  </label>
+                <div class="card__textarea-wrap" data-container="taskTextarea">
+                  
                 </div>
 
                 <div class="card__settings">
@@ -310,31 +429,8 @@ export default class TaskEdit extends Component{
                       </fieldset>
                     </div>
                     
-                    <div class="card__hashtag">
-                      <div class="card__hashtag-list">
-                        ${Array.from(this._tags, tag => (`
-                          <span class="card__hashtag-inner">
-                              <input type="hidden" name="hashtag" value="${tag}" class="card__hashtag-hidden-input"
-                              />
-                              <button type="button" class="card__hashtag-name">
-                              #${tag}
-                              </button>
-                              <button type="button" class="card__hashtag-delete">
-                              delete
-                              </button>
-                            </span>
-                        `.trim())).join(``)
-                        }
-                      </div>
-
-                      <label>
-                        <input
-                          type="text"
-                          class="card__hashtag-input"
-                          name="hashtag-input"
-                          placeholder="Type new hashtag here"
-                        />
-                      </label>
+                    <div class="card__hashtag" data-container="taskTags">
+                    
                     </div>
                   </div>
 
@@ -351,23 +447,9 @@ export default class TaskEdit extends Component{
                     />
                   </label>
 
-                  <div class="card__colors-inner">
+                  <div class="card__colors-inner" data-container="taskColors">
                     <h3 class="card__colors-title">Color</h3>
-                    <div class="card__colors-wrap">
-                      ${(Object.keys(this._colors).map((color)=>(`
-                      <input
-                        type="radio"
-                        id="color-${color}-1"
-                        class="card__color-input card__color-input--${color} visually-hidden"
-                        name="color"
-                        value="${color}"
-                        ${this._colors[color] ? `checked` : ``}
-                      />
-                      <label
-                        for="color-${color}-1"
-                        class="card__color card__color--${color}">${color}</label>
-                      `.trim()))).join(``)}
-                    </div>
+                    
                   </div>
                 </div>
 
@@ -385,7 +467,7 @@ export default class TaskEdit extends Component{
       .addEventListener(`click`, this._onSubmitButtonClick);
 
     this._element.querySelector(`.card__btn--edit`)
-      .addEventListener(`click`, this._onReject);
+      .addEventListener(`click`, this._onEditButtonClick);
 
     this._element.querySelector(`.card__btn--favorites`)
       .addEventListener(`click`, this._onFavoriteButtonClick);
@@ -402,17 +484,23 @@ export default class TaskEdit extends Component{
     this._element.querySelector(`.card__repeat-toggle`)
       .addEventListener(`click`, this._onChangeRepeated);
 
-    this._element.querySelector(`.card__hashtag-input`)
-      .addEventListener(`change`, this._onInputHashtag);
-
-    this._element.querySelectorAll(`.card__hashtag-delete`)
-      .forEach((tag) => {tag.addEventListener(`click`, this._onDeleteHashtag)});
-
     this._element.querySelector(`.js-datepicker`)
       .addEventListener(`change-date`, this._onCheckedDate);
 
+    // Слушатели событий на дочерних компонентах
+    this.components.taskTags.element.querySelector(`.card__hashtag-input`)
+      .addEventListener(`change`, this._onInputHashtag);
 
-    setTimeout(()=>{
+    this.components.taskTags.element.querySelectorAll(`.card__hashtag-delete`)
+      .forEach((tag) => {
+        tag.addEventListener(`click`, this._onDeleteHashtag)
+      });
+
+    this.components.taskTextarea.element.querySelector(`textarea`)
+      .addEventListener(`blur`, this._onSetText);
+
+
+    setTimeout(() => {
       const datepicker = $(`.js-datepicker`).datepicker({
         language: 'en',
         dateFormat: 'MM d',
@@ -422,11 +510,11 @@ export default class TaskEdit extends Component{
         timeFormat: ' ',
         altFieldDateFormat: 'hh:ii AA',
         onSelect: function (formattedDate, date, inst) {
-          const event = new CustomEvent('change-date', { 'detail': date });
+          const event = new CustomEvent('change-date', {'detail': date});
           datepicker[0].dispatchEvent(event);
         }
       });
-      // document.body.addEventListener('click', this._onClickWithoutTask);
+      document.body.addEventListener('click', this._onClickWithoutTask);
     }, 500);
   }
 
@@ -435,7 +523,7 @@ export default class TaskEdit extends Component{
       .removeEventListener(`click`, this._onSubmitButtonClick);
 
     this._element.querySelector(`.card__btn--edit`)
-      .removeEventListener(`click`, this._onReject);
+      .removeEventListener(`click`, this._onEditButtonClick);
 
     this._element.querySelector(`.card__btn--favorites`)
       .removeEventListener(`click`, this._onFavoriteButtonClick);
@@ -452,16 +540,23 @@ export default class TaskEdit extends Component{
     this._element.querySelector(`.card__repeat-toggle`)
       .removeEventListener(`click`, this._onChangeRepeated);
 
-    this._element.querySelector(`.card__hashtag-input`)
+    // Слушатели событий на дочерних компонентах
+    this.components.taskTags.element.querySelector(`.card__hashtag-input`)
       .removeEventListener(`change`, this._onInputHashtag);
 
-    this._element.querySelectorAll(`.card__hashtag-delete`)
-      .forEach((tag) => {tag.removeEventListener(`click`, this._onDeleteHashtag)});
+    this.components.taskTags.element.querySelectorAll(`.card__hashtag-delete`)
+      .forEach((tag) => {
+        tag.removeEventListener(`click`, this._onDeleteHashtag)
+      });
+
+    this.components.taskTextarea.element.querySelector(`textarea`)
+      .removeEventListener(`blur`, this._onSetText);
+
 
     this._element.querySelector(`.js-datepicker`)
       .removeEventListener(`change-date`, this._onCheckedDate);
 
-    /*document.body.removeEventListener('click', this._onClickWithoutTask);*/
+    document.body.removeEventListener('click', this._onClickWithoutTask);
   }
 
   update(data) {
@@ -473,10 +568,13 @@ export default class TaskEdit extends Component{
     this._colors = data.colors;
     this._isFavorites = data.isFavorites;
     this._isArchive = data.archive;
+
+    for (let key in this._components) {
+      this._components[key].resetData(data);
+    }
   }
 
   updateState() {
-    console.log(this._dueDate);
     this._state.isDate = !!this.dueDate;
     this._state.isRepeated = this._isRepeating();
   }
@@ -487,6 +585,25 @@ export default class TaskEdit extends Component{
       text: (value) => target.text = value,
       color: (value) => target.colors[value] = true,
       repeat: (value) => target.repeat[value] = true,
+    }
+  }
+
+  renderComponents(componentName) {
+    const addComponent = (name, instance)=>{
+      const DOMContainer = this._element.querySelector(`[data-container=${name}]`);
+      const component = instance.render();
+
+      DOMContainer.appendChild(component);
+    };
+
+    if (!!componentName) {
+      const value = this._components[componentName];
+      addComponent(componentName, value);
+    } else {
+      for (let key in this._components) {
+        const value = this._components[key];
+        addComponent(key, value);
+      }
     }
   }
 
