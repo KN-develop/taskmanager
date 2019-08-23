@@ -10,13 +10,23 @@ export default class TaskDatapicker extends Component{
     this._dueDate = data.dueDate;
 
     this._element = null;
-    this._state = {
-      // isEdit: false
-    };
+    /*this._state = {
+      isDate: !!data.dueDate,
+    };*/
+
+    this._state.isDate = !!data.dueDate;
   }
 
   get initData() {
     return this.__copyData;
+  }
+
+  set isDate(value) {
+    this._state.isDate = value;
+  }
+
+  get isDate() {
+    return this._state.isDate;
   }
 
 
@@ -53,25 +63,30 @@ export default class TaskDatapicker extends Component{
 
   get template() {
     return `<div>
-              <label class="card__input-deadline-wrap">
-                <input
-                  class="card__date js-datepicker"
-                  type="text"
-                  placeholder="${this.dueDate.date}"
-                  name="date"
-                  value="${this.dueDate.date}"
-                  readonly
-                />
-              </label>
-              <label class="card__input-deadline-wrap">
-                <input
-                  class="card__time js-timepicker"
-                  type="text"
-                  placeholder="${this.dueDate.time}"
-                  name="time"
-                  readonly
-                />
-              </label>
+              <button class="card__date-deadline-toggle" type="button">
+                date: <span class="card__date-status">${this._state.isDate ? 'yes' : 'no'}</span>
+              </button>
+              <fieldset class="card__date-deadline" ${this._state.isDate ? '' : 'disabled'}>
+                <label class="card__input-deadline-wrap">
+                  <input
+                    class="card__date js-datepicker"
+                    type="text"
+                    placeholder="${this.dueDate.date}"
+                    name="date"
+                    value="${this.dueDate.date}"
+                    readonly
+                  />
+                </label>
+                <label class="card__input-deadline-wrap">
+                  <input
+                    class="card__time js-timepicker"
+                    type="text"
+                    placeholder="${this.dueDate.time}"
+                    name="time"
+                    readonly
+                  />
+                </label>
+              </fieldset>
             </div>`.trim();
   }
 

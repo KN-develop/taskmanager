@@ -225,8 +225,9 @@ export default class TaskEdit extends Component {
    */
   _onChangeDate() {
     this._state.isDate = !this._state.isDate;
+    this.components.taskDatapicker.isDate = !this.components.taskDatapicker.isDate;
     this.unbind();
-    this._partialUpdate('taskDatepicker');
+    this._partialUpdate('taskDatapicker');
     this.bind();
   }
 
@@ -392,14 +393,8 @@ export default class TaskEdit extends Component {
                 <div class="card__settings">
                   <div class="card__details">
                     <div class="card__dates">
-                      <button class="card__date-deadline-toggle" type="button">
-                        date: <span class="card__date-status">${this._state.isDate ? 'yes' : 'no'}</span>
-                      </button>
 
                       <div data-container="taskDatapicker"></div>
-                      <fieldset class="card__date-deadline" ${this._state.isDate ? '' : 'disabled'}>
-                        
-                      </fieldset>
 
                       <div data-container="taskRepeat"></div>
                     </div>
@@ -453,16 +448,16 @@ export default class TaskEdit extends Component {
     this._element.querySelector(`.card__delete`)
       .addEventListener(`click`, this._onDeleteButtonClick);
 
-    this._element.querySelector(`.card__date-deadline-toggle`)
+    // Слушатели событий на дочерних компонентах
+    this.components.taskDatapicker.element.querySelector(`.card__date-deadline-toggle`)
       .addEventListener(`click`, this._onChangeDate);
 
-    this._element.querySelector(`.card__repeat-toggle`)
-      .addEventListener(`click`, this._onChangeRepeated);
-
-    this._element.querySelector(`.js-datepicker`)
+    this.components.taskDatapicker.element.querySelector(`.js-datepicker`)
       .addEventListener(`change-date`, this._onCheckedDate);
 
-    // Слушатели событий на дочерних компонентах
+    this.components.taskRepeat.element.querySelector(`.card__repeat-toggle`)
+      .addEventListener(`click`, this._onChangeRepeated);
+
     this.components.taskTags.element.querySelector(`.card__hashtag-input`)
       .addEventListener(`change`, this._onInputHashtag);
 
@@ -490,7 +485,7 @@ export default class TaskEdit extends Component {
         }
       });
       document.body.addEventListener('click', this._onClickWithoutTask);
-    }, 500);
+    }, 50);
   }
 
   unbind() {
@@ -509,10 +504,13 @@ export default class TaskEdit extends Component {
     this._element.querySelector(`.card__delete`)
       .removeEventListener(`click`, this._onDeleteButtonClick);
 
-    this._element.querySelector(`.card__date-deadline-toggle`)
+    // Слушатели событий на дочерних компонентах
+    this.components.taskDatapicker.element.querySelector(`.card__date-deadline-toggle`)
       .removeEventListener(`click`, this._onChangeDate);
 
-    // Слушатели событий на дочерних компонентах
+    this.components.taskDatapicker.element.querySelector(`.js-datepicker`)
+      .removeEventListener(`change-date`, this._onCheckedDate);
+
     this.components.taskRepeat.element.querySelector(`.card__repeat-toggle`)
       .removeEventListener(`click`, this._onChangeRepeated);
 
