@@ -3,6 +3,8 @@ import Component from './Component';
 import TaskTextarea from './form-components/TaskTexarea';
 import TaskColors from './form-components/TaskColors';
 import TaskTags from './form-components/TaskTags';
+import TaskDatapicker from './form-components/TaskDatapicker';
+import TaskRepeat from './form-components/TaskRepeat';
 
 export default class TaskEdit extends Component {
   constructor(data) {
@@ -24,6 +26,13 @@ export default class TaskEdit extends Component {
       taskTextarea: new TaskTextarea({text: this._text}),
       taskColors: new TaskColors({colors: this._colors}),
       taskTags: new TaskTags({tags: this._tags}),
+      taskDatapicker: new TaskDatapicker({dueDate: this._dueDate}),
+      taskRepeat: new TaskRepeat({
+        repeat: this._repeatingDays,
+        state: {
+          isRepeated: this._isRepeating()
+        }
+      }),
     };
 
     this._element = null;
@@ -62,7 +71,7 @@ export default class TaskEdit extends Component {
   get initData() {
     return this.__copyData;
   }
-
+/*
   get dueDate() {
     if (this._dueDate) {
       const date = new Date(this._dueDate);
@@ -87,8 +96,7 @@ export default class TaskEdit extends Component {
         time: '',
       };
     }
-  }
-
+  }*/
   /**
    * Проверяет, задача повторяющаяся или нет
    * @returns {boolean}
@@ -218,7 +226,7 @@ export default class TaskEdit extends Component {
   _onChangeDate() {
     this._state.isDate = !this._state.isDate;
     this.unbind();
-    this._partialUpdate();
+    this._partialUpdate('taskDatepicker');
     this.bind();
   }
 
@@ -228,8 +236,9 @@ export default class TaskEdit extends Component {
    */
   _onChangeRepeated() {
     this._state.isRepeated = !this._state.isRepeated;
+    this.components.taskRepeat.isRepeat = !this.components.taskRepeat.isRepeat;
     this.unbind();
-    this._partialUpdate();
+    this._partialUpdate('taskRepeat');
     this.bind();
   }
 
@@ -387,46 +396,12 @@ export default class TaskEdit extends Component {
                         date: <span class="card__date-status">${this._state.isDate ? 'yes' : 'no'}</span>
                       </button>
 
+                      <div data-container="taskDatapicker"></div>
                       <fieldset class="card__date-deadline" ${this._state.isDate ? '' : 'disabled'}>
-                        <label class="card__input-deadline-wrap">
-                          <input
-                            class="card__date js-datepicker"
-                            type="text"
-                            placeholder="${this.dueDate.date}"
-                            name="date"
-                            value="${this.dueDate.date}"
-                            readonly
-                          />
-                        </label>
-                        <label class="card__input-deadline-wrap">
-                          <input
-                            class="card__time js-timepicker"
-                            type="text"
-                            placeholder="${this.dueDate.time}"
-                            name="time"
-                            readonly
-                          />
-                        </label>
+                        
                       </fieldset>
 
-                      <button class="card__repeat-toggle" type="button">
-                        repeat:<span class="card__repeat-status">${this._state.isRepeated ? 'yes' : 'no'}</span>
-                      </button>
-
-                      <fieldset class="card__repeat-days" ${this._state.isRepeated ? `` : `disabled`}>
-                        <div class="card__repeat-days-inner">
-                          ${(Object.keys(this._repeatingDays).map((day) => (`
-                            <input
-                                  class="visually-hidden card__repeat-day-input"
-                                  type="checkbox"
-                                  id="repeat-${day}-1"
-                                  name="repeat"
-                                  value="${day}"
-                                  ${this._repeatingDays[day] ? 'checked' : ''}/>
-                            <label class="card__repeat-day" for="repeat-${day}-1">${day}</label>
-                          `.trim()))).join(``)}
-                        </div>
-                      </fieldset>
+                      <div data-container="taskRepeat"></div>
                     </div>
                     
                     <div class="card__hashtag" data-container="taskTags">
@@ -537,10 +512,10 @@ export default class TaskEdit extends Component {
     this._element.querySelector(`.card__date-deadline-toggle`)
       .removeEventListener(`click`, this._onChangeDate);
 
-    this._element.querySelector(`.card__repeat-toggle`)
+    // Слушатели событий на дочерних компонентах
+    this.components.taskRepeat.element.querySelector(`.card__repeat-toggle`)
       .removeEventListener(`click`, this._onChangeRepeated);
 
-    // Слушатели событий на дочерних компонентах
     this.components.taskTags.element.querySelector(`.card__hashtag-input`)
       .removeEventListener(`change`, this._onInputHashtag);
 
