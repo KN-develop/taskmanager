@@ -8,8 +8,7 @@
       "repeat":{"mo":false,"tu":false,"we":true,"th":false,"fr":true,"sa":true,"su":false},
       "tags":{},
       "colors":{"black":false,"yellow":true,"blue":false,"green":false,"pink":false},
-      "isFavorites":false,
-      "archive": false
+      "isFavorites":false
     },
     {
       "id":"002","image":"//picsum.photos/100/100?r=0.48154976718669507",
@@ -18,8 +17,7 @@
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
       "tags":{},
       "colors":{"black":false,"yellow":false,"blue":false,"green":true,"pink":false},
-      "isFavorites":true,
-      "archive": false
+      "isFavorites":true
     },
     {
       "id":"003",
@@ -29,8 +27,7 @@
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
       "tags":{},
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false,
-      "archive": true
+      "isFavorites":false
     },
     {
       "id":"004",
@@ -40,8 +37,7 @@
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
       "tags":{},
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false,
-      "archive": true
+      "isFavorites":false
     },
     {
       "id":"005",
@@ -51,8 +47,7 @@
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
       "tags":{},
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false,
-      "archive": false
+      "isFavorites":false
     },
     {
       "id":"006",
@@ -62,8 +57,7 @@
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
       "tags":{},
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false,
-      "archive": false
+      "isFavorites":false
     },
     {
       "id":"007",
@@ -73,8 +67,7 @@
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
       "tags":{},
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false,
-      "archive": false
+      "isFavorites":false
     },
     {
       "id":"008",
@@ -84,8 +77,7 @@
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
       "tags":{},
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false,
-      "archive": false
+      "isFavorites":false
     },
     {
       "id":"009",
@@ -95,8 +87,7 @@
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
       "tags":{},
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false,
-      "archive": false
+      "isFavorites":false
     },
     {
       "id":"010",
@@ -106,8 +97,7 @@
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
       "tags":{},
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false,
-      "archive": false
+      "isFavorites":false
     },
     {
       "id":"011",
@@ -117,8 +107,7 @@
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
       "tags":{},
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false,
-      "archive": false
+      "isFavorites":false
     }
   ]
 }

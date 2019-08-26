@@ -16,6 +16,7 @@ export default class Filter extends Component{
     evt.preventDefault();
     const name = evt.target.id.split('__')[1];
     this._onSelect(name);
+    // console.log(evt.target);
   }
 
   get template() {

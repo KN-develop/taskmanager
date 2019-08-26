@@ -280,6 +280,8 @@ export class TasksModel {
   constructor() {
     this._data = [];
     this._idCounter = Date.now();
+
+    this.addDataItems = this.addDataItems.bind(this);
   }
 
   get data() {
@@ -316,8 +318,28 @@ export class TasksModel {
     }
   }
 
-  getData() {
-    // будет получать данные с сервера, пока втупую берет из переменной
+  getData(callback, context) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', './tasks.json', true);
+    xhr.send();
+
+    xhr.onreadystatechange = function() {
+
+      if (xhr.readyState !== 4) {
+        return 0;
+      }
+
+      if (xhr.status !== 200) {
+        console.log(xhr.status + ': ' + xhr.statusText);
+      } else {
+        const response = JSON.parse(xhr.responseText);
+        context.addDataItems(response.tasks);
+        callback(context.data);
+
+      }
+    }
+
+      // будет получать данные с сервера, пока втупую берет из переменной
     /*try {
       const request = new Request('https://taskmanager-91d17.firebaseio.com/tasks.json', {
         method: 'get',
@@ -328,7 +350,7 @@ export class TasksModel {
     } catch (e) {
       console.error(e);
     }*/
-    this.addDataItems(inputTasks);
+    // this.addDataItems(inputTasks);
   }
 
   saveData() {

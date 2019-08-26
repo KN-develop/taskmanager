@@ -14,8 +14,7 @@ export default function taskmanager() {
   const taskmanager = document.querySelector('.js-taskmanager');
   if (taskmanager) {
     // tasks Model Init
-    const tasksModel = new TasksModel();
-    tasksModel.getData();
+    // tasksModel.getData();
 
     // TODO Копия объекта с задачами
     // const tasks = Object.assign([], tasksData);
@@ -25,15 +24,37 @@ export default function taskmanager() {
     const filterContainer = taskmanager.querySelector(`.main__filter`);
     const filterComponent = new Filter(filterData);
     filterContainer.appendChild(filterComponent.render());
+    const filterParameters = {
+      all: task=>!task.isArchived,
+      overdue: ()=>true,
+      today: (task)=>{
+        const today = new Date();
+        const askDate = task.dueDate ? new Date(task.dueDate) : false;
+        if (!askDate) {return false;}
+        if (today.getDate() === askDate.getDate() && today.getMonth() === askDate.getMonth() && today.getFullYear() === askDate.getFullYear()) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      favorites: task=>task.isFavorites,
+      repeating: (task)=>{for (let key in task.repeat) {if (!!task.repeat[key]) {return true;}}},
+      tags: (task)=>true,
+      archive: task=>task.isArchived
+    };
     filterComponent.onSelect = (filterName) => {
-      destroyTasks(createdTasksComponents);
+      let filteredTasks = [];
       console.log(filterName);
+      filteredTasks = tasksData.filter(task=>filterParameters[filterName](task));
+      destroyTasks(createdTasksComponents);
+      createdTasksComponents = createTasks(filteredTasks);
+      console.log(tasksData);
     };
 
     //TODO Задачи
 
-
     const tasksContainer = taskmanager.querySelector(`.board__tasks`);
+    let tasksData = [];
 
     // const updateTask = (task, modelId, newTask) => {
     //   tasksData[i] = Object.assign({}, task, newTask);
@@ -110,9 +131,19 @@ export default function taskmanager() {
       createdTasks.forEach((tasksComponents)=>tasksComponents.forEach((task)=>task.unrender()));
     };
 
+    let createdTasksComponents = {};
 
-    const createdTasksComponents = createTasks(tasksModel.data);
+    const onResponseTask = function(data) {
+      tasksData = data;
+      createdTasksComponents = createTasks(tasksData);
+    };
 
+    const tasksModel = new TasksModel();
+    const initTasks = function() {
+      tasksModel.getData(onResponseTask, tasksModel);
+    };
+
+    initTasks();
 
 
   }
