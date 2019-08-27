@@ -60,6 +60,12 @@ body {
   margin-bottom: 29px;
 }
 
+.main__filter-inner {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
 .control {
   position: relative;
   display: flex;

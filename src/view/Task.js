@@ -11,7 +11,7 @@ export default class Task extends Component{
     this._dueDate = data.dueDate;
     this._id = data.id;
     this._image = data.image;
-    this._tags = data.tags;
+    this._tags = new Set(Array.from(data.tags));
     this._repeatingDays = data.repeat;
     this._colors = data.colors;
     this._isFavorites = data.isFavorites;

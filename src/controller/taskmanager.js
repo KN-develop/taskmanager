@@ -25,8 +25,8 @@ export default function taskmanager() {
     const filterComponent = new Filter(filterData);
     filterContainer.appendChild(filterComponent.render());
     const filterParameters = {
-      all: task=>!task.isArchived,
-      overdue: ()=>true,
+      all: task=>!task.archive,
+      overdue: task=>task.dueDate && task.dueDate < Date.now(),
       today: (task)=>{
         const today = new Date();
         const askDate = task.dueDate ? new Date(task.dueDate) : false;
@@ -39,16 +39,14 @@ export default function taskmanager() {
       },
       favorites: task=>task.isFavorites,
       repeating: (task)=>{for (let key in task.repeat) {if (!!task.repeat[key]) {return true;}}},
-      tags: (task)=>true,
-      archive: task=>task.isArchived
+      tags: task=>task.tags.length,
+      archive: task=>task.archive
     };
     filterComponent.onSelect = (filterName) => {
       let filteredTasks = [];
-      console.log(filterName);
       filteredTasks = tasksData.filter(task=>filterParameters[filterName](task));
       destroyTasks(createdTasksComponents);
       createdTasksComponents = createTasks(filteredTasks);
-      console.log(tasksData);
     };
 
     //TODO Задачи
@@ -80,10 +78,12 @@ export default function taskmanager() {
           taskComponent.onArchive = (newObject) => {
             taskEditComponent.update(tasksModel.updateDataItem(task.modelId, newObject));
             taskEditComponent.updateState();
+            filterComponent.calculateFilter(tasksData);
           };
           taskComponent.onFavorites = (newObject) => {
             taskEditComponent.update(tasksModel.updateDataItem(task.modelId, newObject));
             taskEditComponent.updateState();
+            filterComponent.calculateFilter(tasksData);
           };
 
           // Диспетчеризация обновлений задачи в режиме редактирования
@@ -106,22 +106,26 @@ export default function taskmanager() {
             taskComponent.render();
             tasksContainer.replaceChild(taskComponent.element, taskEditComponent.element);
             taskEditComponent.unrender();
+            filterComponent.calculateFilter(tasksData);
           };
 
           taskEditComponent.onDelete = (modelId) => {
             tasksContainer.removeChild(taskEditComponent.element);
             taskEditComponent.unrender();
             tasksModel.deleteDataItem(modelId);
+            filterComponent.calculateFilter(tasksData);
           };
 
           taskEditComponent.onArchive = (newObject) => {
             taskComponent.update(tasksModel.updateDataItem(task.modelId, newObject));
             taskEditComponent.updateState();
+            filterComponent.calculateFilter(tasksData);
           };
 
           taskEditComponent.onFavorites = (newObject) => {
             taskComponent.update(tasksModel.updateDataItem(task.modelId, newObject));
             taskEditComponent.updateState();
+            filterComponent.calculateFilter(tasksData);
           };
       });
       return createdTasks;
@@ -135,7 +139,8 @@ export default function taskmanager() {
 
     const onResponseTask = function(data) {
       tasksData = data;
-      createdTasksComponents = createTasks(tasksData);
+      createdTasksComponents = createTasks(tasksData.filter(task=>!task.archive));
+      filterComponent.calculateFilter(tasksData);
     };
 
     const tasksModel = new TasksModel();

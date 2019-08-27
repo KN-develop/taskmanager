@@ -6,18 +6,20 @@
       "text":"Here is a card with filled data",
       "dueDate":1564952781150,
       "repeat":{"mo":false,"tu":false,"we":true,"th":false,"fr":true,"sa":true,"su":false},
-      "tags":{},
+      "tags":[],
       "colors":{"black":false,"yellow":true,"blue":false,"green":false,"pink":false},
-      "isFavorites":false
+      "isFavorites":false,
+      "archive": false
     },
     {
       "id":"002","image":"//picsum.photos/100/100?r=0.48154976718669507",
       "text":"Here is a card with filled data",
       "dueDate":1564952781150,
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
-      "tags":{},
+      "tags":["repeat", "product"],
       "colors":{"black":false,"yellow":false,"blue":false,"green":true,"pink":false},
-      "isFavorites":true
+      "isFavorites":true,
+      "archive": false
     },
     {
       "id":"003",
@@ -25,9 +27,10 @@
       "text":"Here is a card with filled data",
       "dueDate":"",
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
-      "tags":{},
+      "tags":[],
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false
+      "isFavorites":false,
+      "archive": true
     },
     {
       "id":"004",
@@ -35,9 +38,10 @@
       "text":"Here is a card with filled data",
       "dueDate":"",
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
-      "tags":{},
+      "tags":[],
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false
+      "isFavorites":false,
+      "archive": true
     },
     {
       "id":"005",
@@ -45,9 +49,10 @@
       "text":"Here is a card with filled data",
       "dueDate":"",
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
-      "tags":{},
+      "tags":[],
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false
+      "isFavorites":false,
+      "archive": false
     },
     {
       "id":"006",
@@ -55,9 +60,10 @@
       "text":"Here is a card with filled data",
       "dueDate":"",
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
-      "tags":{},
+      "tags":[],
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false
+      "isFavorites":false,
+      "archive": false
     },
     {
       "id":"007",
@@ -65,9 +71,10 @@
       "text":"Here is a card with filled data",
       "dueDate":"",
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
-      "tags":{},
+      "tags":[],
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false
+      "isFavorites":false,
+      "archive": false
     },
     {
       "id":"008",
@@ -75,9 +82,10 @@
       "text":"Here is a card with filled data",
       "dueDate":"",
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
-      "tags":{},
+      "tags":[],
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false
+      "isFavorites":false,
+      "archive": false
     },
     {
       "id":"009",
@@ -85,9 +93,10 @@
       "text":"Here is a card with filled data",
       "dueDate":"",
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
-      "tags":{},
+      "tags":[],
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false
+      "isFavorites":false,
+      "archive": false
     },
     {
       "id":"010",
@@ -95,9 +104,10 @@
       "text":"Here is a card with filled data",
       "dueDate":"",
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
-      "tags":{},
+      "tags":[],
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false
+      "isFavorites":false,
+      "archive": false
     },
     {
       "id":"011",
@@ -105,9 +115,10 @@
       "text":"Here is a card with filled data",
       "dueDate":"",
       "repeat":{"mo":false,"tu":false,"we":false,"th":false,"fr":false,"sa":false,"su":false},
-      "tags":{},
+      "tags":[],
       "colors":{"black":false,"yellow":false,"blue":true,"green":false,"pink":false},
-      "isFavorites":false
+      "isFavorites":false,
+      "archive": false
     }
   ]
 }

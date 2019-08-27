@@ -249,7 +249,7 @@ export default class TaskEdit extends Component {
    * @private
    */
   _onInputHashtag(evt) {
-    this._tags.add(evt.target.value);
+    // this._tags.add(evt.target.value);
     this.components.taskTags.tags = evt.target.value;
     this.unbind();
     this._partialUpdate('taskTags');

@@ -6,7 +6,7 @@ export default class TaskTags extends Component{
     this.__copyData = {
       tags: new Set(Array.from(data.tags)),
     };
-    this._tags = data.tags;
+    this._tags = new Set(Array.from(data.tags));
 
     this._element = null;
     this._state = {
@@ -26,7 +26,7 @@ export default class TaskTags extends Component{
   get template() {
     return `<div class="card__hashtag-container">
               <div class="card__hashtag-list">
-                ${Array.from(this._tags, tag => (`
+                ${Array.from(this._tags).map(tag => (`
                   <span class="card__hashtag-inner">
                       <input type="hidden" name="hashtag" value="${tag}" class="card__hashtag-hidden-input"
                       />
